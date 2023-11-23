@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from PIL import Image
 
 link = "christmas_recipes.csv"
 
@@ -15,33 +16,53 @@ st.write("Nombre de plats :")
 selected_servings = st.selectbox('Sélectionner une valeur:', ['Toutes'] + df['Servings'].unique().tolist())
 
 # Filtrage du dataFrame en fonction des valeurs sélectionnées
-filtered_df = df.copy()
-
-if selected_time != 'Toutes':
-    filtered_df = filtered_df[filtered_df['Time'] == selected_time]
-
-if selected_servings != 'Toutes':
-    filtered_df = filtered_df[filtered_df['Servings'] == selected_servings]
-
 # Filtrage du DataFrame en fonction de la recherche
-filtered_df = filtered_df[filtered_df.astype(str).apply(lambda row: row.str.contains(search_zone, case=False).any(), axis=1)]
 
 # Affichage des résultats
-st.dataframe(filtered_df)
+def dataframe_with_selections(df):
+    df = df[df.astype(str).apply(lambda row: row.str.contains(search_zone, case=False).any(), axis=1)]
+    if selected_time != 'Toutes':
+        df = df[df['Time'] == selected_time]
+    if selected_servings != 'Toutes':
+        df = df[df['Servings'] == selected_servings]
+    filtered_df = df.copy()
+    filtered_df.insert(0, "Select", False)
+
+    edited_df = st.data_editor(
+        filtered_df,
+        hide_index=True,
+        column_config={"Select": st.column_config.CheckboxColumn(required=True)},
+        disabled=df.columns,
+    )
+
+    selected_rows = edited_df[edited_df.Select]
+    return selected_rows.drop('Select', axis=1)
+
+selection = dataframe_with_selections(df)
+#st.write("Your selection:")
+#st.write(selection)
 
 # Affichage de la recette sélectionnée
-if not filtered_df.empty:
-    st.write("Recette sélectionnée :")
-    selected_row = st.selectbox('Sélectionner une ligne:', filtered_df.index)
+if not selection.empty:
+    selected_row = selection.index
+    liste_titre = list(selection.loc[selected_row, 'Title'])
+    st.write("Titre :", liste_titre[0])
+    liste_temps = list(selection.loc[selected_row, 'Time'])
+    st.write("Temps de préparation :", liste_temps[0], 'minutes')
+    liste_couverts = list(selection.loc[selected_row, 'Servings'])
+    st.write("Nombre de couverts :", liste_couverts[0])
+    liste_ingrédients = list(selection.loc[selected_row, 'Ingredients'])
+    st.write("Ingrédients :", liste_ingrédients[0])
+    liste_instructions = list(selection.loc[selected_row, 'Instructions'])
+    st.write("Instructions :", liste_instructions[0])
     
-    st.image(filtered_df.loc[selected_row, 'Image'])
-    st.write("Titre :", filtered_df.loc[selected_row, 'Title'])
-    st.write("Temps nécessaire à la préparation :", filtered_df.loc[selected_row, 'Time'])
-    st.write("Nombre de plats :", filtered_df.loc[selected_row, 'Servings'])
-    st.write("Ingrédients :", filtered_df.loc[selected_row, 'Ingredients'])
-    st.write("Instructions :", filtered_df.loc[selected_row, 'Instructions'])
-else:
-    st.write("Aucun résultat trouvé.")
+    #st.write("Instructions :", filtered_df.loc[selected_row, 'Instructions'])
+#else:
+    #st.write("Aucun résultat trouvé.")
 
 
 
+#image_url = "https://exemple.com/votre-image.jpg"
+#code_html = f"<img src='{image_url}' width='100%' />"
+#st.markdown('code_html, unsafe_allow_html=True)
+#st.markdown(code_html, unsafe_allow_html=True)
