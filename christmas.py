@@ -29,7 +29,19 @@ filtered_df = filtered_df[filtered_df.astype(str).apply(lambda row: row.str.cont
 # Affichage des résultats
 st.dataframe(filtered_df)
 
-
+# Affichage de la recette sélectionnée
+if not filtered_df.empty:
+    st.write("Recette sélectionnée :")
+    selected_row = st.selectbox('Sélectionner une ligne:', filtered_df.index)
+    
+    st.image(filtered_df.loc[selected_row, 'Image'])
+    st.write("Titre :", filtered_df.loc[selected_row, 'Title'])
+    st.write("Temps nécessaire à la préparation :", filtered_df.loc[selected_row, 'Time'])
+    st.write("Nombre de plats :", filtered_df.loc[selected_row, 'Servings'])
+    st.write("Ingrédients :", filtered_df.loc[selected_row, 'Ingredients'])
+    st.write("Instructions :", filtered_df.loc[selected_row, 'Instructions'])
+else:
+    st.write("Aucun résultat trouvé.")
 
 
 
