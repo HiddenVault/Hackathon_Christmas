@@ -12,7 +12,7 @@ search_zone = st.text_input("Rechercher dans le DataFrame:")
 st.write("Temps nécessaire à la préparation :")
 selected_time = st.selectbox('Sélectionner une valeur:', ['Toutes'] + df['Time'].unique().tolist())
 
-st.write("Nombre de plats :")
+st.write("Nombre de couverts :")
 selected_servings = st.selectbox('Sélectionner une valeur:', ['Toutes'] + df['Servings'].unique().tolist())
 
 # Filtrage du dataFrame en fonction des valeurs sélectionnées
@@ -39,12 +39,13 @@ def dataframe_with_selections(df):
     return selected_rows.drop('Select', axis=1)
 
 selection = dataframe_with_selections(df)
-#st.write("Your selection:")
-#st.write(selection)
 
 # Affichage de la recette sélectionnée
 if not selection.empty:
     selected_row = selection.index
+    liste_image = list(selection.loc[selected_row, 'Image'])
+    image_url = liste_image[0]
+    st.image(image_url, caption="Photo" )
     liste_titre = list(selection.loc[selected_row, 'Title'])
     st.write("Titre :", liste_titre[0])
     liste_temps = list(selection.loc[selected_row, 'Time'])
@@ -52,17 +53,9 @@ if not selection.empty:
     liste_couverts = list(selection.loc[selected_row, 'Servings'])
     st.write("Nombre de couverts :", liste_couverts[0])
     liste_ingrédients = list(selection.loc[selected_row, 'Ingredients'])
-    st.write("Ingrédients :", liste_ingrédients[0])
+    st.write("Ingrédients :\n", liste_ingrédients[0])
     liste_instructions = list(selection.loc[selected_row, 'Instructions'])
-    st.write("Instructions :", liste_instructions[0])
+    st.write("Instructions :\n", liste_instructions[0])
     
-    #st.write("Instructions :", filtered_df.loc[selected_row, 'Instructions'])
-#else:
-    #st.write("Aucun résultat trouvé.")
 
 
-
-#image_url = "https://exemple.com/votre-image.jpg"
-#code_html = f"<img src='{image_url}' width='100%' />"
-#st.markdown('code_html, unsafe_allow_html=True)
-#st.markdown(code_html, unsafe_allow_html=True)
