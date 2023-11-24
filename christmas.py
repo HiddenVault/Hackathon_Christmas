@@ -11,7 +11,7 @@ st.markdown(code_html, unsafe_allow_html = True)
 st.markdown('<h1 style="color:red;">Christmas Recipes', unsafe_allow_html=True)
 
 # Zone de recherche
-search_zone = st.text_input("Rechercher dans le DataFrame:")
+search_zone = st.text_input("Rechercher des ingrédients:")
 
 st.write("Temps nécessaire à la préparation :")
 selected_time = st.selectbox('Sélectionner une valeur:', ['Toutes'] + df['Time'].unique().tolist())
