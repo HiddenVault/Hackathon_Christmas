@@ -52,14 +52,25 @@ if not selection.empty:
     image_url = liste_image[0]
     st.image(image_url, caption="Photo" )
     liste_titre = list(selection.loc[selected_row, 'Title'])
-    st.write("Titre :", liste_titre[0])
+    st.markdown("**Recette :**")
+    st.write(liste_titre[0])
+
     liste_temps = list(selection.loc[selected_row, 'Time'])
-    st.write("Temps de préparation :", liste_temps[0], 'minutes')
+    st.markdown("**Temps de préparation :**")
+    st.write(liste_temps[0], 'minutes')
+
     liste_couverts = list(selection.loc[selected_row, 'Servings'])
-    st.write("Nombre de couverts :", liste_couverts[0])
+    st.markdown("**Nombre de couverts :**")
+    st.write(liste_couverts[0])
+
+
     liste_ingrédients = list(selection.loc[selected_row, 'Ingredients'])
-    st.write("Ingrédients : ", liste_ingrédients[0].replace('[','').replace(']','').replace("'",''))
+    st.markdown("**Ingrédients :**")
+    st.write(liste_ingrédients[0].replace('[','').replace(']','').replace("'",''))
+
+
     liste_instructions = list(selection.loc[selected_row, 'Instructions'])
-    st.write("Instructions :  ", liste_instructions[0])
+    st.markdown("**Instructions :**")
+    st.write(liste_instructions[0])
     
     st.markdown('<h3 style="color:red;">Enjoy your meal and Happy Christmas !', unsafe_allow_html=True)
