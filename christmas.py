@@ -5,8 +5,9 @@ from PIL import Image
 link = "christmas_recipes.csv"
 
 df = pd.read_csv(link)
-image_url= 'https://www.ambiance-sticker.com/images/Image/sticker-noel-frise-de-noel-rouge-et-vert-ambiance-sticker-col-inc_SAND_L102.png'
-code_html = f"<img src='{image_url}' width='200' height='200'/>"
+
+image_url= 'https://st4.depositphotos.com/2627021/31189/i/450/depositphotos_311897692-stock-photo-christmas-tree-with-baubles-and.jpg'
+code_html = f"<img src='{image_url}' width='100%'/>"
 st.markdown(code_html, unsafe_allow_html = True)
 st.markdown('<h1 style="color:red;">Christmas Recipes', unsafe_allow_html=True)
 
