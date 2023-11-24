@@ -43,9 +43,27 @@ def dataframe_with_selections(df):
 
 selection = dataframe_with_selections(df)
 
+# Conversion de la colonne 'Time' en string
 selection['Time'] = selection['Time'].astype(str)
+# Remplacement des virgules suivies d'un espace par une virgule suivie d'un saut de ligne
 selection['Ingredients'] = selection['Ingredients'].str.replace(', ', ',\n')
+# Suppression des crochets et des apostrophes de la colonne 'Ingredients'
+selection['Ingredients'] = selection['Ingredients'].str.replace("[\[\]']", '', regex=True)
+# Division de la chaîne à chaque virgule,
+# Ajout du préfixe "-" suivi d'un espace à chaque élément, 
+# On rejoint deux éléments avec un saut de ligne.
+selection['Ingredients'] = selection['Ingredients'].apply(lambda x: '\n'.join(['- ' + i.strip() for i in x.split(',')]))
+# Remplacement des points suivis d'un espace par un point suivi d'un saut de ligne.
 selection['Instructions'] = selection['Instructions'].str.replace('. ', '.\n')
+# Division de la chaîne à chaque saut de ligne, 
+# Ajoute du préfixe du numéro de ligne suivi d'un point et d'un espace à chaque élément, 
+# On rejoint deux éléments avec un saut de ligne.
+selection['Instructions'] = selection['Instructions'].apply(lambda x: '\n'.join([str(i+1) + '. ' + instruction.strip() for i, instruction in enumerate(x.split('\n'))]))
+
+numbered_instructions = []
+for index, row in df.iterrows():
+    instructions_list = row['Instructions'].split('\n')
+    numbered_instructions.extend([f"{index + 1}. {instruction}" for instruction in instructions_list])
 
 # Affichage de la recette sélectionnée
 if not selection.empty:
@@ -67,13 +85,14 @@ if not selection.empty:
     st.markdown("**Number of covers :**")
     st.text(liste_couverts[0])
 
-    liste_ingrédients = list(selection.loc[selected_row, 'Ingredients'])
+    liste_ingredients = list(selection.loc[selected_row, 'Ingredients'])
     st.markdown("**Ingredients :**")
-    st.text(liste_ingrédients[0].replace('[','').replace(']','').replace("'",''))
-
+    num_lines = len(liste_ingredients[0].split('\n'))
+    st.text_area(label='', value=liste_ingredients[0], height=(num_lines + 1) * 20)
 
     liste_instructions = list(selection.loc[selected_row, 'Instructions'])
     st.markdown("**Instructions :**")
-    st.text(liste_instructions[0])
+    num_lines = len(liste_instructions[0].split('\n'))
+    st.text_area(label='', value=liste_instructions[0], height=(num_lines + 1) * 20)
     
     st.markdown('<h3 style="color:red;">Enjoy your meal and Happy Christmas !', unsafe_allow_html=True)
