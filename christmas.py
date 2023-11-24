@@ -5,6 +5,10 @@ from PIL import Image
 link = "christmas_recipes.csv"
 
 df = pd.read_csv(link)
+image_url= 'https://www.ambiance-sticker.com/images/Image/sticker-noel-frise-de-noel-rouge-et-vert-ambiance-sticker-col-inc_SAND_L102.png'
+code_html = f"<img src='{image_url}' width='200' height='200'/>"
+st.markdown(code_html, unsafe_allow_html = True)
+st.markdown('<h1 style="color:red;">Christmas Recipes', unsafe_allow_html=True)
 
 # Zone de recherche
 search_zone = st.text_input("Rechercher dans le DataFrame:")
@@ -53,9 +57,8 @@ if not selection.empty:
     liste_couverts = list(selection.loc[selected_row, 'Servings'])
     st.write("Nombre de couverts :", liste_couverts[0])
     liste_ingrédients = list(selection.loc[selected_row, 'Ingredients'])
-    st.write("Ingrédients :\n", liste_ingrédients[0])
+    st.write("Ingrédients : ", liste_ingrédients[0].replace('[','').replace(']','').replace("'",''))
     liste_instructions = list(selection.loc[selected_row, 'Instructions'])
-    st.write("Instructions :\n", liste_instructions[0])
+    st.write("Instructions :  ", liste_instructions[0])
     
-
-
+    st.markdown('<h3 style="color:red;">Enjoy your meal and Happy Christmas !', unsafe_allow_html=True)
